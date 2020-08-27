@@ -1,0 +1,8 @@
+version: "3.0"
+
+services:
+  demo-secure-frontend:
+    build: .
+    image: demo-secure-frontend
+    ports:
+      - 8000:80
