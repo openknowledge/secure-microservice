@@ -1,0 +1,43 @@
+version: "3.0"
+
+services:
+  demo-mailcatcher:
+    image: docker.io/schickling/mailcatcher:latest
+    ports:
+    - 1025:1025
+    - 8200:1080
+
+  demo-keycloak-db:
+    image: postgres:12.0-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+
+  demo-keycloak:
+    build: .
+    image: secure-microservice-keycloak
+    environment:
+      # Postgres configuration
+      DB_VENDOR: POSTGRES
+      DB_ADDR: demo-keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      # Keycloak admin login
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+      SMTP_FROM: keycloak@examples.openknowledge.de
+      SMTP_FROM_NAME: Auth Example
+      SMTP_HOST: mailcatcher
+      SMTP_PORT: 1025
+      REDIRECT_URIS: '["http://localhost:3000/*", "http://localhost:8000/*", "http://localhost/demo/*"]'
+      WEB_ORIGINS: '["http://localhost:3000","http://localhost:8000","http://localhost/demo"]'
+    ports:
+      - 8282:8080
+    depends_on:
+      - demo-keycloak-db
+      - demo-mailcatcher
+

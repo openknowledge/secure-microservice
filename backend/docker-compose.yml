@@ -1,0 +1,28 @@
+version: "3.0"
+
+services:
+  demo-secure-microservice:
+    build:
+      context: .
+    image: demo-secure-microservice:latest
+    environment:
+      mp_jwt_verify_publickey_location: http://demo-keycloak:8080/auth/realms/MicroProfile/protocol/openid-connect/certs
+      mp_jwt_verify_issuer: http://localhost:8282/auth/realms/MicroProfile
+  #    db_class_name: org.postgresql.ds.PGSimpleDataSource
+  #    db_server_name: demo-secure-microservice-db
+  #    db_username: postgres
+  #    db_password: postgres
+  #    db_name: securedmicroservice
+    ports:
+      - 8080:8080
+      - 8848:4848
+      - 8009:9009
+  #  depends_on:
+  #    - demo-secure-microservice-db
+
+  # demo-secure-microservice-db:
+  #   image: postgres
+  #   environment:
+  #    POSTGRES_DB: securedmicroservice
+  #    POSTGRES_USER: postgres
+  #    POSTGRES_PASSWORD: postgres

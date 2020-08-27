@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>de.openknowledge.examples</groupId>
+    <artifactId>secured-microservice-backend</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>secured-microservice-backend-application</artifactId>
+  <name>Open Knowledge - Secured Microservice - Backend - Application</name>
+  <packaging>war</packaging>
+
+  <properties>
+    <maven.compile.source>11</maven.compile.source>
+    <maven.compile.target>11</maven.compile.target>
+    <java.version>11</java.version>
+
+    <!-- test dependencies -->
+    <junit-jupiter.version>5.4.1</junit-jupiter.version>
+    <junit-platform-commons.version>1.4.2</junit-platform-commons.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>secured-microservice-backend-domain</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.microprofile-ext.openapi-ext</groupId>
+      <artifactId>swagger-ui</artifactId>
+      <version>1.0.3</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- *** test dependencies - start *** -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+    </dependency>
+    <!-- json -->
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>1.0.5</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- *** test dependencies - end *** -->
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

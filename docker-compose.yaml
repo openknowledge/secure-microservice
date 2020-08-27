@@ -1,0 +1,56 @@
+version: '3.0'
+services:
+  demo-mailcatcher:
+    image: docker.io/schickling/mailcatcher:latest
+    ports:
+      - 8200:1080
+  demo-keycloak-db:
+    image: postgres:12.0-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+  demo-keycloak:
+    build:
+      context: keycloak
+    image: demo-secure-keycloak:11.0.0
+    environment:
+      # Postgres configuration
+      DB_VENDOR: POSTGRES
+      DB_ADDR: demo-keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      # Keycloak admin login
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+      SMTP_FROM: keycloak@examples.openknowledge.de
+      SMTP_FROM_NAME: Auth Example
+      SMTP_HOST: demo-mailcatcher
+      SMTP_PORT: 1025
+      REDIRECT_URIS: '["http://localhost:3000/*", "http://localhost:8000/*", "http://localhost/demo/*"]'
+      WEB_ORIGINS: '["http://localhost:3000","http://localhost:8000","http://localhost/demo"]'
+    ports:
+      - 8282:8080
+    depends_on:
+      - demo-keycloak-db
+      - demo-mailcatcher
+  demo-secure-microservice:
+    build:
+      context: backend
+    image: demo-secure-microservice:1.0.0
+    environment:
+      mp_jwt_verify_publickey_location: http://demo-keycloak:8080/auth/realms/MicroProfile/protocol/openid-connect/certs
+      mp_jwt_verify_issuer: http://localhost:8282/auth/realms/MicroProfile
+    ports:
+      - 8080:8080
+      - 8848:4848
+      - 8009:9009
+  demo-secure-frontend:
+    build:
+      context: frontend
+    image: demo-secure-frontend:1.0.0
+    ports:
+      - 8000:80

@@ -1,0 +1,4 @@
+set configs.config.server-config.jms-service.type=DISABLED
+set configs.config.default-config.jms-service.type=DISABLED
+delete-http-listener http-listener-2
+set-requesttracing-configuration --enabled=true --dynamic=true
